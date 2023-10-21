@@ -9,8 +9,8 @@
 
 #[derive(Debug)]
 struct Person {
-    name: String,
-    age: usize,
+    pub name: String,
+    pub age: usize,
 }
 
 // We implement the Default trait to use it as a fallback
@@ -40,10 +40,32 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of
 // Person Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
+
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        let v: Vec<_> = s.split(',').collect();
+        if v.len() != 2 {
+            return Person::default();
+        }
+        let name = v[0];
+
+        let age = v[1];
+        if name.is_empty() || age.is_empty() {
+            return Person::default();
+        }
+
+        match age.parse() {
+            Err(_) => {
+                return Person::default();
+            }
+            Ok(age) => {
+                return Person {
+                    name: name.to_string(),
+                    age: age,
+                }
+            }
+        }
     }
 }
 
